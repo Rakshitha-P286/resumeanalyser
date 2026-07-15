@@ -27,3 +27,4 @@ An AI-powered Resume Analyzer built using Machine Learning and NLP.
 pip install -r requirements.txt
 python -m streamlit run app.py
 ```
+deployed link-https://resumeeanalyserr.streamlit.app/
