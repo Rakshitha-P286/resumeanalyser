@@ -427,19 +427,63 @@ def normalize_recommendations(raw_recommendations):
             )
         )
 
+
         coverage = get_value(
-            record, "coverage", "match percentage",
-            "match_percent", "score", default=0
+            record,
+            "coveragePercent",
+            "coverage_percent",
+            "coverage",
+            "match percentage",
+            "match_percent",
+            "score",
+            default=None,
         )
 
         try:
-            coverage = float(coverage)
-            # Some implementations may return a fraction from 0 to 1.
-            if 0 <= coverage <= 1:
-                coverage *= 100
-            coverage = max(0, min(100, coverage))
+            if coverage is None:
+                # Calculate coverage from the actual skill lists
+                required_count = len(matched) + len(missing)
+                coverage = (
+                    100.0 * len(matched) / required_count
+                    if required_count else 0.0
+                )
+            else:
+                coverage = float(
+                    str(coverage).strip().replace("%", "")
+                )
+
+                # Treat values between 0 and 1 as fractions,
+                # but preserve an exact 0 as 0%.
+                if 0 < coverage <= 1:
+                    coverage *= 100
+
+            coverage = max(0.0, min(100.0, coverage))
+
         except (TypeError, ValueError):
-            coverage = 0
+            coverage = 0.0
+
+        
+        matched = normalize_skill_list(
+            get_value(
+                record,
+                "matchedSkills",
+                "matched skills",
+                "matched",
+                "skills matched",
+                default=[],
+            )
+        )
+
+        missing = normalize_skill_list(
+            get_value(
+                record,
+                "missingSkills",
+                "missing skills",
+                "missing",
+                "skills missing",
+                default=[],
+            )
+        )
 
         results.append({
             "career": str(career),
