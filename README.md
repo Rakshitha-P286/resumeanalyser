@@ -27,4 +27,6 @@ An AI-powered Resume Analyzer built using Machine Learning and NLP.
 pip install -r requirements.txt
 python -m streamlit run app.py
 ```
+Sample resume:
+[Chanduuuu resume.pdf](https://github.com/user-attachments/files/33593066/Chanduuuu.resume.pdf)
 
